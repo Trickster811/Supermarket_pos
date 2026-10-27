@@ -1,0 +1,43 @@
+==========================================
+LINUX
+==========================================
+read -r -p "Administrator full name: " INITIAL_ADMIN_FULL_NAME
+read -r -p "Administrator username: " INITIAL_ADMIN_USERNAME
+read -r -s -p "Administrator password: " INITIAL_ADMIN_PASSWORD
+echo
+
+export INITIAL_ADMIN_FULL_NAME INITIAL_ADMIN_USERNAME INITIAL_ADMIN_PASSWORD
+
+npm run admin:create
+
+unset INITIAL_ADMIN_FULL_NAME INITIAL_ADMIN_USERNAME INITIAL_ADMIN_PASSWORD
+
+==========================================
+WINDOWS
+==========================================
+$INITIAL_ADMIN_FULL_NAME = Read-Host "Administrator full name"
+$INITIAL_ADMIN_USERNAME = Read-Host "Administrator username"
+
+$securePassword = Read-Host "Administrator password" -AsSecureString
+$ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($securePassword)
+
+try {
+    $INITIAL_ADMIN_PASSWORD = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr)
+
+    $env:INITIAL_ADMIN_FULL_NAME = $INITIAL_ADMIN_FULL_NAME
+    $env:INITIAL_ADMIN_USERNAME = $INITIAL_ADMIN_USERNAME
+    $env:INITIAL_ADMIN_PASSWORD = $INITIAL_ADMIN_PASSWORD
+
+    npm run admin:create
+}
+finally {
+    Remove-Item Env:INITIAL_ADMIN_FULL_NAME -ErrorAction SilentlyContinue
+    Remove-Item Env:INITIAL_ADMIN_USERNAME -ErrorAction SilentlyContinue
+    Remove-Item Env:INITIAL_ADMIN_PASSWORD -ErrorAction SilentlyContinue
+
+    if ($ptr -ne [IntPtr]::Zero) {
+        [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr)
+    }
+
+    Remove-Variable INITIAL_ADMIN_PASSWORD, securePassword -ErrorAction SilentlyContinue
+}
