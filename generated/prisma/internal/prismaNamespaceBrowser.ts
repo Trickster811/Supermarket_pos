@@ -140,8 +140,11 @@ export const ProductScalarFieldEnum = {
   sellingMode: 'sellingMode',
   unitOfMeasure: 'unitOfMeasure',
   price: 'price',
+  taxRate: 'taxRate',
   isActive: 'isActive',
   trackInventory: 'trackInventory',
+  isArchived: 'isArchived',
+  archivedAt: 'archivedAt',
   categoryId: 'categoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -155,8 +158,16 @@ export const SaleScalarFieldEnum = {
   transactionUuid: 'transactionUuid',
   cashierId: 'cashierId',
   terminalId: 'terminalId',
+  subtotalAmount: 'subtotalAmount',
+  taxAmount: 'taxAmount',
   totalAmount: 'totalAmount',
   currencyCode: 'currencyCode',
+  paymentMethod: 'paymentMethod',
+  paymentStatus: 'paymentStatus',
+  amountReceived: 'amountReceived',
+  changeAmount: 'changeAmount',
+  mobileMoneyProvider: 'mobileMoneyProvider',
+  paymentReference: 'paymentReference',
   status: 'status',
   deviceCreatedAt: 'deviceCreatedAt',
   createdAt: 'createdAt'
@@ -174,6 +185,8 @@ export const SaleItemScalarFieldEnum = {
   quantity: 'quantity',
   unitPrice: 'unitPrice',
   subtotal: 'subtotal',
+  taxRate: 'taxRate',
+  taxAmount: 'taxAmount',
   createdAt: 'createdAt'
 } as const
 

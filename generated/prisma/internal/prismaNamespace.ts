@@ -1636,8 +1636,11 @@ export const ProductScalarFieldEnum = {
   sellingMode: 'sellingMode',
   unitOfMeasure: 'unitOfMeasure',
   price: 'price',
+  taxRate: 'taxRate',
   isActive: 'isActive',
   trackInventory: 'trackInventory',
+  isArchived: 'isArchived',
+  archivedAt: 'archivedAt',
   categoryId: 'categoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1651,8 +1654,16 @@ export const SaleScalarFieldEnum = {
   transactionUuid: 'transactionUuid',
   cashierId: 'cashierId',
   terminalId: 'terminalId',
+  subtotalAmount: 'subtotalAmount',
+  taxAmount: 'taxAmount',
   totalAmount: 'totalAmount',
   currencyCode: 'currencyCode',
+  paymentMethod: 'paymentMethod',
+  paymentStatus: 'paymentStatus',
+  amountReceived: 'amountReceived',
+  changeAmount: 'changeAmount',
+  mobileMoneyProvider: 'mobileMoneyProvider',
+  paymentReference: 'paymentReference',
   status: 'status',
   deviceCreatedAt: 'deviceCreatedAt',
   createdAt: 'createdAt'
@@ -1670,6 +1681,8 @@ export const SaleItemScalarFieldEnum = {
   quantity: 'quantity',
   unitPrice: 'unitPrice',
   subtotal: 'subtotal',
+  taxRate: 'taxRate',
+  taxAmount: 'taxAmount',
   createdAt: 'createdAt'
 } as const
 
@@ -1963,6 +1976,48 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Decimal[]'
  */
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentMethod'
+ */
+export type EnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentMethod[]'
+ */
+export type ListEnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentStatus'
+ */
+export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PaymentStatus[]'
+ */
+export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'MobileMoneyProvider'
+ */
+export type EnumMobileMoneyProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MobileMoneyProvider'>
+    
+
+
+/**
+ * Reference to a field of type 'MobileMoneyProvider[]'
+ */
+export type ListEnumMobileMoneyProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MobileMoneyProvider[]'>
     
 
 

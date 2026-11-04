@@ -27,11 +27,19 @@ export type AggregateSale = {
 }
 
 export type SaleAvgAggregateOutputType = {
+  subtotalAmount: runtime.Decimal | null
+  taxAmount: runtime.Decimal | null
   totalAmount: runtime.Decimal | null
+  amountReceived: runtime.Decimal | null
+  changeAmount: runtime.Decimal | null
 }
 
 export type SaleSumAggregateOutputType = {
+  subtotalAmount: runtime.Decimal | null
+  taxAmount: runtime.Decimal | null
   totalAmount: runtime.Decimal | null
+  amountReceived: runtime.Decimal | null
+  changeAmount: runtime.Decimal | null
 }
 
 export type SaleMinAggregateOutputType = {
@@ -39,8 +47,16 @@ export type SaleMinAggregateOutputType = {
   transactionUuid: string | null
   cashierId: string | null
   terminalId: string | null
+  subtotalAmount: runtime.Decimal | null
+  taxAmount: runtime.Decimal | null
   totalAmount: runtime.Decimal | null
   currencyCode: string | null
+  paymentMethod: $Enums.PaymentMethod | null
+  paymentStatus: $Enums.PaymentStatus | null
+  amountReceived: runtime.Decimal | null
+  changeAmount: runtime.Decimal | null
+  mobileMoneyProvider: $Enums.MobileMoneyProvider | null
+  paymentReference: string | null
   status: $Enums.SaleStatus | null
   deviceCreatedAt: Date | null
   createdAt: Date | null
@@ -51,8 +67,16 @@ export type SaleMaxAggregateOutputType = {
   transactionUuid: string | null
   cashierId: string | null
   terminalId: string | null
+  subtotalAmount: runtime.Decimal | null
+  taxAmount: runtime.Decimal | null
   totalAmount: runtime.Decimal | null
   currencyCode: string | null
+  paymentMethod: $Enums.PaymentMethod | null
+  paymentStatus: $Enums.PaymentStatus | null
+  amountReceived: runtime.Decimal | null
+  changeAmount: runtime.Decimal | null
+  mobileMoneyProvider: $Enums.MobileMoneyProvider | null
+  paymentReference: string | null
   status: $Enums.SaleStatus | null
   deviceCreatedAt: Date | null
   createdAt: Date | null
@@ -63,8 +87,16 @@ export type SaleCountAggregateOutputType = {
   transactionUuid: number
   cashierId: number
   terminalId: number
+  subtotalAmount: number
+  taxAmount: number
   totalAmount: number
   currencyCode: number
+  paymentMethod: number
+  paymentStatus: number
+  amountReceived: number
+  changeAmount: number
+  mobileMoneyProvider: number
+  paymentReference: number
   status: number
   deviceCreatedAt: number
   createdAt: number
@@ -73,11 +105,19 @@ export type SaleCountAggregateOutputType = {
 
 
 export type SaleAvgAggregateInputType = {
+  subtotalAmount?: true
+  taxAmount?: true
   totalAmount?: true
+  amountReceived?: true
+  changeAmount?: true
 }
 
 export type SaleSumAggregateInputType = {
+  subtotalAmount?: true
+  taxAmount?: true
   totalAmount?: true
+  amountReceived?: true
+  changeAmount?: true
 }
 
 export type SaleMinAggregateInputType = {
@@ -85,8 +125,16 @@ export type SaleMinAggregateInputType = {
   transactionUuid?: true
   cashierId?: true
   terminalId?: true
+  subtotalAmount?: true
+  taxAmount?: true
   totalAmount?: true
   currencyCode?: true
+  paymentMethod?: true
+  paymentStatus?: true
+  amountReceived?: true
+  changeAmount?: true
+  mobileMoneyProvider?: true
+  paymentReference?: true
   status?: true
   deviceCreatedAt?: true
   createdAt?: true
@@ -97,8 +145,16 @@ export type SaleMaxAggregateInputType = {
   transactionUuid?: true
   cashierId?: true
   terminalId?: true
+  subtotalAmount?: true
+  taxAmount?: true
   totalAmount?: true
   currencyCode?: true
+  paymentMethod?: true
+  paymentStatus?: true
+  amountReceived?: true
+  changeAmount?: true
+  mobileMoneyProvider?: true
+  paymentReference?: true
   status?: true
   deviceCreatedAt?: true
   createdAt?: true
@@ -109,8 +165,16 @@ export type SaleCountAggregateInputType = {
   transactionUuid?: true
   cashierId?: true
   terminalId?: true
+  subtotalAmount?: true
+  taxAmount?: true
   totalAmount?: true
   currencyCode?: true
+  paymentMethod?: true
+  paymentStatus?: true
+  amountReceived?: true
+  changeAmount?: true
+  mobileMoneyProvider?: true
+  paymentReference?: true
   status?: true
   deviceCreatedAt?: true
   createdAt?: true
@@ -208,8 +272,16 @@ export type SaleGroupByOutputType = {
   transactionUuid: string
   cashierId: string
   terminalId: string
+  subtotalAmount: runtime.Decimal
+  taxAmount: runtime.Decimal
   totalAmount: runtime.Decimal
   currencyCode: string
+  paymentMethod: $Enums.PaymentMethod
+  paymentStatus: $Enums.PaymentStatus
+  amountReceived: runtime.Decimal | null
+  changeAmount: runtime.Decimal
+  mobileMoneyProvider: $Enums.MobileMoneyProvider | null
+  paymentReference: string | null
   status: $Enums.SaleStatus
   deviceCreatedAt: Date
   createdAt: Date
@@ -243,8 +315,16 @@ export type SaleWhereInput = {
   transactionUuid?: Prisma.UuidFilter<"Sale"> | string
   cashierId?: Prisma.UuidFilter<"Sale"> | string
   terminalId?: Prisma.UuidFilter<"Sale"> | string
+  subtotalAmount?: Prisma.DecimalFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFilter<"Sale"> | string
+  paymentMethod?: Prisma.EnumPaymentMethodFilter<"Sale"> | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFilter<"Sale"> | $Enums.PaymentStatus
+  amountReceived?: Prisma.DecimalNullableFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.EnumMobileMoneyProviderNullableFilter<"Sale"> | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.StringNullableFilter<"Sale"> | string | null
   status?: Prisma.EnumSaleStatusFilter<"Sale"> | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFilter<"Sale"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Sale"> | Date | string
@@ -259,8 +339,16 @@ export type SaleOrderByWithRelationInput = {
   transactionUuid?: Prisma.SortOrder
   cashierId?: Prisma.SortOrder
   terminalId?: Prisma.SortOrder
+  subtotalAmount?: Prisma.SortOrder
+  taxAmount?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  amountReceived?: Prisma.SortOrderInput | Prisma.SortOrder
+  changeAmount?: Prisma.SortOrder
+  mobileMoneyProvider?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentReference?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   deviceCreatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -278,8 +366,16 @@ export type SaleWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.SaleWhereInput | Prisma.SaleWhereInput[]
   cashierId?: Prisma.UuidFilter<"Sale"> | string
   terminalId?: Prisma.UuidFilter<"Sale"> | string
+  subtotalAmount?: Prisma.DecimalFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFilter<"Sale"> | string
+  paymentMethod?: Prisma.EnumPaymentMethodFilter<"Sale"> | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFilter<"Sale"> | $Enums.PaymentStatus
+  amountReceived?: Prisma.DecimalNullableFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.EnumMobileMoneyProviderNullableFilter<"Sale"> | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.StringNullableFilter<"Sale"> | string | null
   status?: Prisma.EnumSaleStatusFilter<"Sale"> | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFilter<"Sale"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Sale"> | Date | string
@@ -294,8 +390,16 @@ export type SaleOrderByWithAggregationInput = {
   transactionUuid?: Prisma.SortOrder
   cashierId?: Prisma.SortOrder
   terminalId?: Prisma.SortOrder
+  subtotalAmount?: Prisma.SortOrder
+  taxAmount?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  amountReceived?: Prisma.SortOrderInput | Prisma.SortOrder
+  changeAmount?: Prisma.SortOrder
+  mobileMoneyProvider?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentReference?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   deviceCreatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -314,8 +418,16 @@ export type SaleScalarWhereWithAggregatesInput = {
   transactionUuid?: Prisma.UuidWithAggregatesFilter<"Sale"> | string
   cashierId?: Prisma.UuidWithAggregatesFilter<"Sale"> | string
   terminalId?: Prisma.UuidWithAggregatesFilter<"Sale"> | string
+  subtotalAmount?: Prisma.DecimalWithAggregatesFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalWithAggregatesFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalWithAggregatesFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringWithAggregatesFilter<"Sale"> | string
+  paymentMethod?: Prisma.EnumPaymentMethodWithAggregatesFilter<"Sale"> | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusWithAggregatesFilter<"Sale"> | $Enums.PaymentStatus
+  amountReceived?: Prisma.DecimalNullableWithAggregatesFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalWithAggregatesFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.EnumMobileMoneyProviderNullableWithAggregatesFilter<"Sale"> | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.StringNullableWithAggregatesFilter<"Sale"> | string | null
   status?: Prisma.EnumSaleStatusWithAggregatesFilter<"Sale"> | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeWithAggregatesFilter<"Sale"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Sale"> | Date | string
@@ -324,8 +436,16 @@ export type SaleScalarWhereWithAggregatesInput = {
 export type SaleCreateInput = {
   id?: string
   transactionUuid: string
+  subtotalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: string
+  paymentMethod?: $Enums.PaymentMethod
+  paymentStatus?: $Enums.PaymentStatus
+  amountReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: $Enums.MobileMoneyProvider | null
+  paymentReference?: string | null
   status?: $Enums.SaleStatus
   deviceCreatedAt: Date | string
   createdAt?: Date | string
@@ -340,8 +460,16 @@ export type SaleUncheckedCreateInput = {
   transactionUuid: string
   cashierId: string
   terminalId: string
+  subtotalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: string
+  paymentMethod?: $Enums.PaymentMethod
+  paymentStatus?: $Enums.PaymentStatus
+  amountReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: $Enums.MobileMoneyProvider | null
+  paymentReference?: string | null
   status?: $Enums.SaleStatus
   deviceCreatedAt: Date | string
   createdAt?: Date | string
@@ -352,8 +480,16 @@ export type SaleUncheckedCreateInput = {
 export type SaleUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   transactionUuid?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.NullableEnumMobileMoneyProviderFieldUpdateOperationsInput | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -368,8 +504,16 @@ export type SaleUncheckedUpdateInput = {
   transactionUuid?: Prisma.StringFieldUpdateOperationsInput | string
   cashierId?: Prisma.StringFieldUpdateOperationsInput | string
   terminalId?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.NullableEnumMobileMoneyProviderFieldUpdateOperationsInput | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -382,8 +526,16 @@ export type SaleCreateManyInput = {
   transactionUuid: string
   cashierId: string
   terminalId: string
+  subtotalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: string
+  paymentMethod?: $Enums.PaymentMethod
+  paymentStatus?: $Enums.PaymentStatus
+  amountReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: $Enums.MobileMoneyProvider | null
+  paymentReference?: string | null
   status?: $Enums.SaleStatus
   deviceCreatedAt: Date | string
   createdAt?: Date | string
@@ -392,8 +544,16 @@ export type SaleCreateManyInput = {
 export type SaleUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   transactionUuid?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.NullableEnumMobileMoneyProviderFieldUpdateOperationsInput | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -404,8 +564,16 @@ export type SaleUncheckedUpdateManyInput = {
   transactionUuid?: Prisma.StringFieldUpdateOperationsInput | string
   cashierId?: Prisma.StringFieldUpdateOperationsInput | string
   terminalId?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.NullableEnumMobileMoneyProviderFieldUpdateOperationsInput | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -426,15 +594,27 @@ export type SaleCountOrderByAggregateInput = {
   transactionUuid?: Prisma.SortOrder
   cashierId?: Prisma.SortOrder
   terminalId?: Prisma.SortOrder
+  subtotalAmount?: Prisma.SortOrder
+  taxAmount?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  amountReceived?: Prisma.SortOrder
+  changeAmount?: Prisma.SortOrder
+  mobileMoneyProvider?: Prisma.SortOrder
+  paymentReference?: Prisma.SortOrder
   status?: Prisma.SortOrder
   deviceCreatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type SaleAvgOrderByAggregateInput = {
+  subtotalAmount?: Prisma.SortOrder
+  taxAmount?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
+  amountReceived?: Prisma.SortOrder
+  changeAmount?: Prisma.SortOrder
 }
 
 export type SaleMaxOrderByAggregateInput = {
@@ -442,8 +622,16 @@ export type SaleMaxOrderByAggregateInput = {
   transactionUuid?: Prisma.SortOrder
   cashierId?: Prisma.SortOrder
   terminalId?: Prisma.SortOrder
+  subtotalAmount?: Prisma.SortOrder
+  taxAmount?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  amountReceived?: Prisma.SortOrder
+  changeAmount?: Prisma.SortOrder
+  mobileMoneyProvider?: Prisma.SortOrder
+  paymentReference?: Prisma.SortOrder
   status?: Prisma.SortOrder
   deviceCreatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -454,15 +642,27 @@ export type SaleMinOrderByAggregateInput = {
   transactionUuid?: Prisma.SortOrder
   cashierId?: Prisma.SortOrder
   terminalId?: Prisma.SortOrder
+  subtotalAmount?: Prisma.SortOrder
+  taxAmount?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   currencyCode?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  amountReceived?: Prisma.SortOrder
+  changeAmount?: Prisma.SortOrder
+  mobileMoneyProvider?: Prisma.SortOrder
+  paymentReference?: Prisma.SortOrder
   status?: Prisma.SortOrder
   deviceCreatedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type SaleSumOrderByAggregateInput = {
+  subtotalAmount?: Prisma.SortOrder
+  taxAmount?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
+  amountReceived?: Prisma.SortOrder
+  changeAmount?: Prisma.SortOrder
 }
 
 export type SaleScalarRelationFilter = {
@@ -554,6 +754,26 @@ export type SaleUncheckedUpdateManyWithoutTerminalNestedInput = {
   deleteMany?: Prisma.SaleScalarWhereInput | Prisma.SaleScalarWhereInput[]
 }
 
+export type EnumPaymentMethodFieldUpdateOperationsInput = {
+  set?: $Enums.PaymentMethod
+}
+
+export type EnumPaymentStatusFieldUpdateOperationsInput = {
+  set?: $Enums.PaymentStatus
+}
+
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type NullableEnumMobileMoneyProviderFieldUpdateOperationsInput = {
+  set?: $Enums.MobileMoneyProvider | null
+}
+
 export type EnumSaleStatusFieldUpdateOperationsInput = {
   set?: $Enums.SaleStatus
 }
@@ -589,8 +809,16 @@ export type SaleUpdateOneRequiredWithoutReceiptNestedInput = {
 export type SaleCreateWithoutCashierInput = {
   id?: string
   transactionUuid: string
+  subtotalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: string
+  paymentMethod?: $Enums.PaymentMethod
+  paymentStatus?: $Enums.PaymentStatus
+  amountReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: $Enums.MobileMoneyProvider | null
+  paymentReference?: string | null
   status?: $Enums.SaleStatus
   deviceCreatedAt: Date | string
   createdAt?: Date | string
@@ -603,8 +831,16 @@ export type SaleUncheckedCreateWithoutCashierInput = {
   id?: string
   transactionUuid: string
   terminalId: string
+  subtotalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: string
+  paymentMethod?: $Enums.PaymentMethod
+  paymentStatus?: $Enums.PaymentStatus
+  amountReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: $Enums.MobileMoneyProvider | null
+  paymentReference?: string | null
   status?: $Enums.SaleStatus
   deviceCreatedAt: Date | string
   createdAt?: Date | string
@@ -646,8 +882,16 @@ export type SaleScalarWhereInput = {
   transactionUuid?: Prisma.UuidFilter<"Sale"> | string
   cashierId?: Prisma.UuidFilter<"Sale"> | string
   terminalId?: Prisma.UuidFilter<"Sale"> | string
+  subtotalAmount?: Prisma.DecimalFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFilter<"Sale"> | string
+  paymentMethod?: Prisma.EnumPaymentMethodFilter<"Sale"> | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFilter<"Sale"> | $Enums.PaymentStatus
+  amountReceived?: Prisma.DecimalNullableFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFilter<"Sale"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.EnumMobileMoneyProviderNullableFilter<"Sale"> | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.StringNullableFilter<"Sale"> | string | null
   status?: Prisma.EnumSaleStatusFilter<"Sale"> | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFilter<"Sale"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Sale"> | Date | string
@@ -656,8 +900,16 @@ export type SaleScalarWhereInput = {
 export type SaleCreateWithoutTerminalInput = {
   id?: string
   transactionUuid: string
+  subtotalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: string
+  paymentMethod?: $Enums.PaymentMethod
+  paymentStatus?: $Enums.PaymentStatus
+  amountReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: $Enums.MobileMoneyProvider | null
+  paymentReference?: string | null
   status?: $Enums.SaleStatus
   deviceCreatedAt: Date | string
   createdAt?: Date | string
@@ -670,8 +922,16 @@ export type SaleUncheckedCreateWithoutTerminalInput = {
   id?: string
   transactionUuid: string
   cashierId: string
+  subtotalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: string
+  paymentMethod?: $Enums.PaymentMethod
+  paymentStatus?: $Enums.PaymentStatus
+  amountReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: $Enums.MobileMoneyProvider | null
+  paymentReference?: string | null
   status?: $Enums.SaleStatus
   deviceCreatedAt: Date | string
   createdAt?: Date | string
@@ -708,8 +968,16 @@ export type SaleUpdateManyWithWhereWithoutTerminalInput = {
 export type SaleCreateWithoutItemsInput = {
   id?: string
   transactionUuid: string
+  subtotalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: string
+  paymentMethod?: $Enums.PaymentMethod
+  paymentStatus?: $Enums.PaymentStatus
+  amountReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: $Enums.MobileMoneyProvider | null
+  paymentReference?: string | null
   status?: $Enums.SaleStatus
   deviceCreatedAt: Date | string
   createdAt?: Date | string
@@ -723,8 +991,16 @@ export type SaleUncheckedCreateWithoutItemsInput = {
   transactionUuid: string
   cashierId: string
   terminalId: string
+  subtotalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: string
+  paymentMethod?: $Enums.PaymentMethod
+  paymentStatus?: $Enums.PaymentStatus
+  amountReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: $Enums.MobileMoneyProvider | null
+  paymentReference?: string | null
   status?: $Enums.SaleStatus
   deviceCreatedAt: Date | string
   createdAt?: Date | string
@@ -750,8 +1026,16 @@ export type SaleUpdateToOneWithWhereWithoutItemsInput = {
 export type SaleUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   transactionUuid?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.NullableEnumMobileMoneyProviderFieldUpdateOperationsInput | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -765,8 +1049,16 @@ export type SaleUncheckedUpdateWithoutItemsInput = {
   transactionUuid?: Prisma.StringFieldUpdateOperationsInput | string
   cashierId?: Prisma.StringFieldUpdateOperationsInput | string
   terminalId?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.NullableEnumMobileMoneyProviderFieldUpdateOperationsInput | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -776,8 +1068,16 @@ export type SaleUncheckedUpdateWithoutItemsInput = {
 export type SaleCreateWithoutReceiptInput = {
   id?: string
   transactionUuid: string
+  subtotalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: string
+  paymentMethod?: $Enums.PaymentMethod
+  paymentStatus?: $Enums.PaymentStatus
+  amountReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: $Enums.MobileMoneyProvider | null
+  paymentReference?: string | null
   status?: $Enums.SaleStatus
   deviceCreatedAt: Date | string
   createdAt?: Date | string
@@ -791,8 +1091,16 @@ export type SaleUncheckedCreateWithoutReceiptInput = {
   transactionUuid: string
   cashierId: string
   terminalId: string
+  subtotalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: string
+  paymentMethod?: $Enums.PaymentMethod
+  paymentStatus?: $Enums.PaymentStatus
+  amountReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: $Enums.MobileMoneyProvider | null
+  paymentReference?: string | null
   status?: $Enums.SaleStatus
   deviceCreatedAt: Date | string
   createdAt?: Date | string
@@ -818,8 +1126,16 @@ export type SaleUpdateToOneWithWhereWithoutReceiptInput = {
 export type SaleUpdateWithoutReceiptInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   transactionUuid?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.NullableEnumMobileMoneyProviderFieldUpdateOperationsInput | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -833,8 +1149,16 @@ export type SaleUncheckedUpdateWithoutReceiptInput = {
   transactionUuid?: Prisma.StringFieldUpdateOperationsInput | string
   cashierId?: Prisma.StringFieldUpdateOperationsInput | string
   terminalId?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.NullableEnumMobileMoneyProviderFieldUpdateOperationsInput | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -845,8 +1169,16 @@ export type SaleCreateManyCashierInput = {
   id?: string
   transactionUuid: string
   terminalId: string
+  subtotalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: string
+  paymentMethod?: $Enums.PaymentMethod
+  paymentStatus?: $Enums.PaymentStatus
+  amountReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: $Enums.MobileMoneyProvider | null
+  paymentReference?: string | null
   status?: $Enums.SaleStatus
   deviceCreatedAt: Date | string
   createdAt?: Date | string
@@ -855,8 +1187,16 @@ export type SaleCreateManyCashierInput = {
 export type SaleUpdateWithoutCashierInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   transactionUuid?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.NullableEnumMobileMoneyProviderFieldUpdateOperationsInput | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -869,8 +1209,16 @@ export type SaleUncheckedUpdateWithoutCashierInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   transactionUuid?: Prisma.StringFieldUpdateOperationsInput | string
   terminalId?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.NullableEnumMobileMoneyProviderFieldUpdateOperationsInput | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -882,8 +1230,16 @@ export type SaleUncheckedUpdateManyWithoutCashierInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   transactionUuid?: Prisma.StringFieldUpdateOperationsInput | string
   terminalId?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.NullableEnumMobileMoneyProviderFieldUpdateOperationsInput | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -893,8 +1249,16 @@ export type SaleCreateManyTerminalInput = {
   id?: string
   transactionUuid: string
   cashierId: string
+  subtotalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: string
+  paymentMethod?: $Enums.PaymentMethod
+  paymentStatus?: $Enums.PaymentStatus
+  amountReceived?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: $Enums.MobileMoneyProvider | null
+  paymentReference?: string | null
   status?: $Enums.SaleStatus
   deviceCreatedAt: Date | string
   createdAt?: Date | string
@@ -903,8 +1267,16 @@ export type SaleCreateManyTerminalInput = {
 export type SaleUpdateWithoutTerminalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   transactionUuid?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.NullableEnumMobileMoneyProviderFieldUpdateOperationsInput | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -917,8 +1289,16 @@ export type SaleUncheckedUpdateWithoutTerminalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   transactionUuid?: Prisma.StringFieldUpdateOperationsInput | string
   cashierId?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.NullableEnumMobileMoneyProviderFieldUpdateOperationsInput | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -930,8 +1310,16 @@ export type SaleUncheckedUpdateManyWithoutTerminalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   transactionUuid?: Prisma.StringFieldUpdateOperationsInput | string
   cashierId?: Prisma.StringFieldUpdateOperationsInput | string
+  subtotalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currencyCode?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  paymentStatus?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  amountReceived?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  changeAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  mobileMoneyProvider?: Prisma.NullableEnumMobileMoneyProviderFieldUpdateOperationsInput | $Enums.MobileMoneyProvider | null
+  paymentReference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumSaleStatusFieldUpdateOperationsInput | $Enums.SaleStatus
   deviceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -973,8 +1361,16 @@ export type SaleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   transactionUuid?: boolean
   cashierId?: boolean
   terminalId?: boolean
+  subtotalAmount?: boolean
+  taxAmount?: boolean
   totalAmount?: boolean
   currencyCode?: boolean
+  paymentMethod?: boolean
+  paymentStatus?: boolean
+  amountReceived?: boolean
+  changeAmount?: boolean
+  mobileMoneyProvider?: boolean
+  paymentReference?: boolean
   status?: boolean
   deviceCreatedAt?: boolean
   createdAt?: boolean
@@ -990,8 +1386,16 @@ export type SaleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   transactionUuid?: boolean
   cashierId?: boolean
   terminalId?: boolean
+  subtotalAmount?: boolean
+  taxAmount?: boolean
   totalAmount?: boolean
   currencyCode?: boolean
+  paymentMethod?: boolean
+  paymentStatus?: boolean
+  amountReceived?: boolean
+  changeAmount?: boolean
+  mobileMoneyProvider?: boolean
+  paymentReference?: boolean
   status?: boolean
   deviceCreatedAt?: boolean
   createdAt?: boolean
@@ -1004,8 +1408,16 @@ export type SaleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   transactionUuid?: boolean
   cashierId?: boolean
   terminalId?: boolean
+  subtotalAmount?: boolean
+  taxAmount?: boolean
   totalAmount?: boolean
   currencyCode?: boolean
+  paymentMethod?: boolean
+  paymentStatus?: boolean
+  amountReceived?: boolean
+  changeAmount?: boolean
+  mobileMoneyProvider?: boolean
+  paymentReference?: boolean
   status?: boolean
   deviceCreatedAt?: boolean
   createdAt?: boolean
@@ -1018,14 +1430,22 @@ export type SaleSelectScalar = {
   transactionUuid?: boolean
   cashierId?: boolean
   terminalId?: boolean
+  subtotalAmount?: boolean
+  taxAmount?: boolean
   totalAmount?: boolean
   currencyCode?: boolean
+  paymentMethod?: boolean
+  paymentStatus?: boolean
+  amountReceived?: boolean
+  changeAmount?: boolean
+  mobileMoneyProvider?: boolean
+  paymentReference?: boolean
   status?: boolean
   deviceCreatedAt?: boolean
   createdAt?: boolean
 }
 
-export type SaleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "transactionUuid" | "cashierId" | "terminalId" | "totalAmount" | "currencyCode" | "status" | "deviceCreatedAt" | "createdAt", ExtArgs["result"]["sale"]>
+export type SaleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "transactionUuid" | "cashierId" | "terminalId" | "subtotalAmount" | "taxAmount" | "totalAmount" | "currencyCode" | "paymentMethod" | "paymentStatus" | "amountReceived" | "changeAmount" | "mobileMoneyProvider" | "paymentReference" | "status" | "deviceCreatedAt" | "createdAt", ExtArgs["result"]["sale"]>
 export type SaleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cashier?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   terminal?: boolean | Prisma.TerminalDefaultArgs<ExtArgs>
@@ -1055,8 +1475,16 @@ export type $SalePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     transactionUuid: string
     cashierId: string
     terminalId: string
+    subtotalAmount: runtime.Decimal
+    taxAmount: runtime.Decimal
     totalAmount: runtime.Decimal
     currencyCode: string
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus: $Enums.PaymentStatus
+    amountReceived: runtime.Decimal | null
+    changeAmount: runtime.Decimal
+    mobileMoneyProvider: $Enums.MobileMoneyProvider | null
+    paymentReference: string | null
     status: $Enums.SaleStatus
     deviceCreatedAt: Date
     createdAt: Date
@@ -1491,8 +1919,16 @@ export interface SaleFieldRefs {
   readonly transactionUuid: Prisma.FieldRef<"Sale", 'String'>
   readonly cashierId: Prisma.FieldRef<"Sale", 'String'>
   readonly terminalId: Prisma.FieldRef<"Sale", 'String'>
+  readonly subtotalAmount: Prisma.FieldRef<"Sale", 'Decimal'>
+  readonly taxAmount: Prisma.FieldRef<"Sale", 'Decimal'>
   readonly totalAmount: Prisma.FieldRef<"Sale", 'Decimal'>
   readonly currencyCode: Prisma.FieldRef<"Sale", 'String'>
+  readonly paymentMethod: Prisma.FieldRef<"Sale", 'PaymentMethod'>
+  readonly paymentStatus: Prisma.FieldRef<"Sale", 'PaymentStatus'>
+  readonly amountReceived: Prisma.FieldRef<"Sale", 'Decimal'>
+  readonly changeAmount: Prisma.FieldRef<"Sale", 'Decimal'>
+  readonly mobileMoneyProvider: Prisma.FieldRef<"Sale", 'MobileMoneyProvider'>
+  readonly paymentReference: Prisma.FieldRef<"Sale", 'String'>
   readonly status: Prisma.FieldRef<"Sale", 'SaleStatus'>
   readonly deviceCreatedAt: Prisma.FieldRef<"Sale", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Sale", 'DateTime'>

@@ -33,6 +33,22 @@ enum SaleStatus {
   VOIDED
 }
 
+enum PaymentMethod {
+  CASH
+  MOBILE_MONEY
+}
+
+enum MobileMoneyProvider {
+  MTN_MOMO
+  ORANGE_MONEY
+}
+
+enum PaymentStatus {
+  CASH_RECEIVED
+  CASHIER_CONFIRMED
+  PROVIDER_VERIFIED
+}
+
 enum InventoryMovementType {
   OPENING_STOCK
   STOCK_IN
@@ -105,10 +121,10 @@ model Terminal {
   auditLogs            AuditLog[]
 
   // Secure device pairing
-  pairingCodeHash    String?
-  pairingExpiresAt   DateTime?
-  deviceTokenHash    String?
-  pairedAt           DateTime?
+  pairingCodeHash  String?
+  pairingExpiresAt DateTime?
+  deviceTokenHash  String?
+  pairedAt         DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -138,30 +154,25 @@ model Category {
 }
 
 model Product {
-  id String @id @default(uuid()) @db.Uuid
-
+  id                 String              @id @default(uuid()) @db.Uuid
   // Internal product identifier.
-  sku String @unique
-
-  name        String
-  description String?
-
+  sku                String              @unique
+  name               String
+  description        String?
   // Barcode for packaged products.
-  barcode String? @unique
-
+  barcode            String?             @unique
   // PLU code for products selected manually.
-  pluCode String? @unique
-
-  sellingMode   SellingMode
-  unitOfMeasure UnitOfMeasure
-
+  pluCode            String?             @unique
+  sellingMode        SellingMode
+  unitOfMeasure      UnitOfMeasure
   // XAF (FCFA). For WEIGHT products,
   // this is the price per unit of measure.
-  price Decimal @db.Decimal(14, 2)
-
-  isActive       Boolean @default(true)
-  trackInventory Boolean @default(true)
-
+  price              Decimal             @db.Decimal(14, 2)
+  taxRate Decimal @default(0) @db.Decimal(5, 2)
+  isActive           Boolean             @default(true)
+  trackInventory     Boolean             @default(true)
+  isArchived Boolean @default(false)
+  archivedAt DateTime?
   categoryId         String?             @db.Uuid
   category           Category?           @relation(fields: [categoryId], references: [id])
   saleItems          SaleItem[]
@@ -190,9 +201,22 @@ model Sale {
 
   cashier  User     @relation(fields: [cashierId], references: [id])
   terminal Terminal @relation(fields: [terminalId], references: [id])
+  subtotalAmount Decimal @default(0) @db.Decimal(14, 2)
+  taxAmount      Decimal @default(0) @db.Decimal(14, 2)
 
   totalAmount  Decimal @db.Decimal(14, 2)
   currencyCode String  @default("XAF") @db.VarChar(3)
+
+  paymentMethod PaymentMethod @default(CASH)
+  paymentStatus PaymentStatus @default(CASH_RECEIVED)
+
+  // Cash payment details
+  amountReceived Decimal? @db.Decimal(14, 2)
+  changeAmount   Decimal  @default(0) @db.Decimal(14, 2)
+
+  // Mobile Money payment details
+  mobileMoneyProvider MobileMoneyProvider?
+  paymentReference    String?
 
   status SaleStatus @default(COMPLETED)
 
@@ -228,6 +252,8 @@ model SaleItem {
   quantity           Decimal             @db.Decimal(14, 3)
   unitPrice          Decimal             @db.Decimal(14, 2)
   subtotal           Decimal             @db.Decimal(14, 2)
+  taxRate   Decimal @default(0) @db.Decimal(5, 2)
+  taxAmount Decimal @default(0) @db.Decimal(14, 2)
   inventoryMovements InventoryMovement[]
 
   createdAt DateTime @default(now())

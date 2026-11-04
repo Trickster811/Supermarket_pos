@@ -159,7 +159,9 @@ export async function userRoutes(app: FastifyInstance) {
 
     const where = {
       ...(role ? { role } : {}),
-      ...(isActive !== undefined ? { isActive } : {}),
+      ...(isActive !== undefined && {
+        isActive: String(isActive).toLowerCase() === "true",
+      }),
       ...(search
         ? {
             OR: [

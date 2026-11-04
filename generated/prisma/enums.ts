@@ -47,6 +47,31 @@ export const SaleStatus = {
 export type SaleStatus = (typeof SaleStatus)[keyof typeof SaleStatus]
 
 
+export const PaymentMethod = {
+  CASH: 'CASH',
+  MOBILE_MONEY: 'MOBILE_MONEY'
+} as const
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
+
+
+export const MobileMoneyProvider = {
+  MTN_MOMO: 'MTN_MOMO',
+  ORANGE_MONEY: 'ORANGE_MONEY'
+} as const
+
+export type MobileMoneyProvider = (typeof MobileMoneyProvider)[keyof typeof MobileMoneyProvider]
+
+
+export const PaymentStatus = {
+  CASH_RECEIVED: 'CASH_RECEIVED',
+  CASHIER_CONFIRMED: 'CASHIER_CONFIRMED',
+  PROVIDER_VERIFIED: 'PROVIDER_VERIFIED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
 export const InventoryMovementType = {
   OPENING_STOCK: 'OPENING_STOCK',
   STOCK_IN: 'STOCK_IN',

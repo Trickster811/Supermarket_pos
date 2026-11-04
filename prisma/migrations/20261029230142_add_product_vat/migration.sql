@@ -1,0 +1,10 @@
+-- AlterTable
+ALTER TABLE "products" ADD COLUMN     "taxRate" DECIMAL(5,2) NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "sale_items" ADD COLUMN     "taxAmount" DECIMAL(14,2) NOT NULL DEFAULT 0,
+ADD COLUMN     "taxRate" DECIMAL(5,2) NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "sales" ADD COLUMN     "subtotalAmount" DECIMAL(14,2) NOT NULL DEFAULT 0,
+ADD COLUMN     "taxAmount" DECIMAL(14,2) NOT NULL DEFAULT 0;

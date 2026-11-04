@@ -1,4 +1,3 @@
-
 import { randomUUID } from "node:crypto";
 import type { FastifyInstance } from "fastify";
 import { prisma } from "../../config/database.js";
@@ -67,7 +66,9 @@ function validItems(items: ReceiptItemInput[]): boolean {
   for (const item of items) {
     if (
       typeof item.productId !== "string" ||
-      !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(item.productId) ||
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+        item.productId,
+      ) ||
       typeof item.quantity !== "string" ||
       !quantityPattern.test(item.quantity) ||
       quantityToMilliUnits(item.quantity) <= 0n ||
@@ -90,6 +91,7 @@ async function loadProducts(items: ReceiptItemInput[]) {
     where: {
       id: { in: items.map((item) => item.productId) },
       isActive: true,
+      isArchived: false,
       trackInventory: true,
     },
     select: {
@@ -132,7 +134,8 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
 
       if (!validItems(body.items)) {
         return reply.code(400).send({
-          message: "Provide valid receipt items. Each product must appear only once.",
+          message:
+            "Provide valid receipt items. Each product must appear only once.",
         });
       }
 
@@ -140,11 +143,14 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
 
       if (!products) {
         return reply.code(400).send({
-          message: "One or more products do not exist, are inactive, or do not track inventory.",
+          message:
+            "One or more products do not exist, are inactive, archived, or do not track inventory.",
         });
       }
 
-      const productMap = new Map(products.map((product) => [product.id, product]));
+      const productMap = new Map(
+        products.map((product) => [product.id, product]),
+      );
 
       try {
         const receipt = await prisma.$transaction(async (tx) => {
@@ -196,7 +202,9 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
         return reply.code(201).send(receipt);
       } catch (error) {
         request.log.error(error);
-        return reply.code(500).send({ message: "Could not create stock receipt." });
+        return reply
+          .code(500)
+          .send({ message: "Could not create stock receipt." });
       }
     },
   );
@@ -224,9 +232,24 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
         ...(search
           ? {
               OR: [
-                { receiptNumber: { contains: search, mode: "insensitive" as const } },
-                { supplierName: { contains: search, mode: "insensitive" as const } },
-                { supplierReference: { contains: search, mode: "insensitive" as const } },
+                {
+                  receiptNumber: {
+                    contains: search,
+                    mode: "insensitive" as const,
+                  },
+                },
+                {
+                  supplierName: {
+                    contains: search,
+                    mode: "insensitive" as const,
+                  },
+                },
+                {
+                  supplierReference: {
+                    contains: search,
+                    mode: "insensitive" as const,
+                  },
+                },
               ],
             }
           : {}),
@@ -310,7 +333,8 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
 
       if (body.items !== undefined && !validItems(body.items)) {
         return reply.code(400).send({
-          message: "Provide valid receipt items. Each product must appear only once.",
+          message:
+            "Provide valid receipt items. Each product must appear only once.",
         });
       }
 
@@ -336,13 +360,17 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
               where: {
                 id: { in: body.items.map((item) => item.productId) },
                 isActive: true,
+                isArchived: false,
                 trackInventory: true,
               },
               select: { id: true, name: true, unitOfMeasure: true },
             });
 
             if (products.length !== body.items.length) {
-              return { error: "INVALID_PRODUCTS" as const };
+              return reply.code(400).send({
+                message:
+                  "One or more products are invalid, inactive, archived, or do not track inventory.",
+              });
             }
           }
 
@@ -366,7 +394,9 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
               where: { stockReceiptId: id },
             });
 
-            const productMap = new Map(products.map((product) => [product.id, product]));
+            const productMap = new Map(
+              products.map((product) => [product.id, product]),
+            );
 
             await tx.stockReceiptItem.createMany({
               data: body.items.map((item) => {
@@ -392,6 +422,15 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
               entityType: "StockReceipt",
               entityId: id,
               details: {
+                receiptNumber: existing.receiptNumber,
+                supplierName:
+                  body.supplierName !== undefined
+                    ? body.supplierName.trim()
+                    : existing.supplierName,
+                itemCount:
+                  body.items !== undefined
+                    ? body.items.length
+                    : existing.items.length,
                 itemsReplaced: body.items !== undefined,
               },
             },
@@ -407,18 +446,26 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
 
         if ("error" in updated) {
           if (updated.error === "NOT_FOUND") {
-            return reply.code(404).send({ message: "Stock receipt not found." });
+            return reply
+              .code(404)
+              .send({ message: "Stock receipt not found." });
           }
           if (updated.error === "NOT_DRAFT") {
-            return reply.code(409).send({ message: "Only draft receipts can be edited." });
+            return reply
+              .code(409)
+              .send({ message: "Only draft receipts can be edited." });
           }
-          return reply.code(400).send({ message: "One or more products are invalid." });
+          return reply
+            .code(400)
+            .send({ message: "One or more products are invalid." });
         }
 
         return updated.receipt;
       } catch (error) {
         request.log.error(error);
-        return reply.code(500).send({ message: "Could not update stock receipt." });
+        return reply
+          .code(500)
+          .send({ message: "Could not update stock receipt." });
       }
     },
   );
@@ -441,8 +488,26 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
             });
 
             if (!receipt) return { error: "NOT_FOUND" as const };
-            if (receipt.status !== "DRAFT") return { error: "NOT_DRAFT" as const };
+            if (receipt.status !== "DRAFT")
+              return { error: "NOT_DRAFT" as const };
             if (receipt.items.length === 0) return { error: "EMPTY" as const };
+            // Revalidate every product at confirmation time.
+            // A product may have been archived after this draft was created.
+            const validProducts = await tx.product.findMany({
+              where: {
+                id: { in: receipt.items.map((item) => item.productId) },
+                isActive: true,
+                isArchived: false,
+                trackInventory: true,
+              },
+              select: {
+                id: true,
+              },
+            });
+
+            if (validProducts.length !== receipt.items.length) {
+              return { error: "INVALID_PRODUCTS" as const };
+            }
 
             // Create missing inventory rows before applying stock increments.
             await tx.inventory.createMany({
@@ -460,7 +525,9 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
               });
 
               if (updated.count !== 1) {
-                throw new Error(`Could not update inventory for product ${item.productId}`);
+                throw new Error(
+                  `Could not update inventory for product ${item.productId}`,
+                );
               }
 
               await tx.inventoryMovement.create({
@@ -496,7 +563,15 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
                 entityId: id,
                 details: {
                   receiptNumber: receipt.receiptNumber,
+                  supplierName: receipt.supplierName,
                   itemCount: receipt.items.length,
+                  totalQuantity: formatQuantity(
+                    receipt.items.reduce(
+                      (total, item) =>
+                        total + quantityToMilliUnits(item.quantity.toString()),
+                      0n,
+                    ),
+                  ),
                 },
               },
             });
@@ -513,14 +588,24 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
 
         if ("error" in result) {
           if (result.error === "NOT_FOUND") {
-            return reply.code(404).send({ message: "Stock receipt not found." });
+            return reply
+              .code(404)
+              .send({ message: "Stock receipt not found." });
           }
           if (result.error === "NOT_DRAFT") {
             return reply.code(409).send({
               message: "This receipt has already been confirmed or cancelled.",
             });
           }
-          return reply.code(400).send({ message: "Cannot confirm an empty receipt." });
+          if (result.error === "INVALID_PRODUCTS") {
+            return reply.code(409).send({
+              message:
+                "This receipt contains one or more products that are inactive, archived, or no longer track inventory. Please edit the draft before confirming.",
+            });
+          }
+          return reply
+            .code(400)
+            .send({ message: "Cannot confirm an empty receipt." });
         }
 
         return result.receipt;
@@ -529,12 +614,14 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
 
         if (isPrismaError(error, "P2034")) {
           return reply.code(409).send({
-            message: "A concurrent stock operation occurred. Please retry confirmation.",
+            message:
+              "A concurrent stock operation occurred. Please retry confirmation.",
           });
         }
 
         return reply.code(500).send({
-          message: "Could not confirm stock receipt. No partial stock update was committed.",
+          message:
+            "Could not confirm stock receipt. No partial stock update was committed.",
         });
       }
     },
@@ -556,7 +643,8 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
           });
 
           if (!receipt) return { error: "NOT_FOUND" as const };
-          if (receipt.status !== "DRAFT") return { error: "NOT_DRAFT" as const };
+          if (receipt.status !== "DRAFT")
+            return { error: "NOT_DRAFT" as const };
 
           await tx.stockReceipt.update({
             where: { id },
@@ -578,7 +666,9 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
 
         if ("error" in result) {
           if (result.error === "NOT_FOUND") {
-            return reply.code(404).send({ message: "Stock receipt not found." });
+            return reply
+              .code(404)
+              .send({ message: "Stock receipt not found." });
           }
           return reply.code(409).send({
             message: "Only draft receipts can be cancelled.",
@@ -588,7 +678,9 @@ export async function stockReceiptRoutes(app: FastifyInstance) {
         return { message: "Stock receipt cancelled successfully." };
       } catch (error) {
         request.log.error(error);
-        return reply.code(500).send({ message: "Could not cancel stock receipt." });
+        return reply
+          .code(500)
+          .send({ message: "Could not cancel stock receipt." });
       }
     },
   );

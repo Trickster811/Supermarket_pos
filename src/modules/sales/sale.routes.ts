@@ -14,6 +14,10 @@ type SaleInput = {
   terminalId: string;
   deviceCreatedAt: string;
   items: SaleItemInput[];
+  paymentMethod: "CASH" | "MOBILE_MONEY";
+  amountReceived?: string;
+  mobileMoneyProvider?: "MTN_MOMO" | "ORANGE_MONEY";
+  paymentReference?: string;
 };
 
 class SaleOperationError extends Error {
@@ -37,6 +41,38 @@ const uuidPattern =
 function quantityToMilliUnits(value: string): bigint {
   const [whole, fraction = ""] = value.split(".");
   return BigInt(whole) * 1000n + BigInt(fraction.padEnd(3, "0"));
+}
+
+function decimalRateToBasisPoints(rate: string | number): bigint {
+  const value = String(rate);
+
+  const [whole = "0", fraction = ""] = value.split(".");
+  const basisPoints = `${fraction}00`.slice(0, 2);
+
+  return BigInt(whole) * 100n + BigInt(basisPoints);
+}
+
+function calculateInclusiveVat(
+  grossCents: bigint,
+  rateBasisPoints: bigint,
+): { netCents: bigint; taxCents: bigint } {
+  if (rateBasisPoints === 0n) {
+    return {
+      netCents: grossCents,
+      taxCents: 0n,
+    };
+  }
+
+  const denominator = 10_000n + rateBasisPoints;
+
+  // Round VAT to the nearest cent.
+  const taxCents =
+    (grossCents * rateBasisPoints + denominator / 2n) / denominator;
+
+  return {
+    netCents: grossCents - taxCents,
+    taxCents,
+  };
 }
 
 function priceToCents(value: string): bigint {
@@ -107,6 +143,27 @@ function validSaleItems(items: unknown): items is SaleItemInput[] {
   return true;
 }
 
+function validPaymentDetails(body: SaleInput): boolean {
+  if (body.paymentMethod === "CASH") {
+    return (
+      typeof body.amountReceived === "string" &&
+      /^(0|[1-9][0-9]{0,11})(\.[0-9]{1,2})?$/.test(body.amountReceived)
+    );
+  }
+
+  if (body.paymentMethod === "MOBILE_MONEY") {
+    return (
+      (body.mobileMoneyProvider === "MTN_MOMO" ||
+        body.mobileMoneyProvider === "ORANGE_MONEY") &&
+      (body.paymentReference === undefined ||
+        (typeof body.paymentReference === "string" &&
+          body.paymentReference.trim().length <= 100))
+    );
+  }
+
+  return false;
+}
+
 export async function saleRoutes(app: FastifyInstance) {
   // ============================================================
   // CREATE A SALE
@@ -138,7 +195,8 @@ export async function saleRoutes(app: FastifyInstance) {
         !uuidPattern.test(body.terminalId) ||
         typeof body.deviceCreatedAt !== "string" ||
         !Number.isFinite(Date.parse(body.deviceCreatedAt)) ||
-        !validSaleItems(body.items)
+        !validSaleItems(body.items) ||
+        !validPaymentDetails(body)
       ) {
         return reply.code(400).send({
           message: "Invalid sale request.",
@@ -203,6 +261,7 @@ export async function saleRoutes(app: FastifyInstance) {
                   in: body.items.map((item) => item.productId),
                 },
                 isActive: true,
+                isArchived: false,
               },
               select: {
                 id: true,
@@ -211,13 +270,14 @@ export async function saleRoutes(app: FastifyInstance) {
                 unitOfMeasure: true,
                 price: true,
                 trackInventory: true,
+                taxRate: true,
               },
             });
 
             if (products.length !== body.items.length) {
               throw new SaleOperationError(
                 "INVALID_PRODUCT",
-                "One or more products do not exist or are inactive.",
+                "One or more products do not exist, are inactive, or are archived.",
               );
             }
 
@@ -245,17 +305,61 @@ export async function saleRoutes(app: FastifyInstance) {
 
               const unitPrice = product.price.toString();
 
-              const subtotalCents = calculateSubtotal(item.quantity, unitPrice);
+              // Customer-facing amount, including VAT.
+              const grossCents = calculateSubtotal(item.quantity, unitPrice);
 
-              totalCents += subtotalCents;
+              // Extract VAT using the product's configured tax rate.
+              const rateBasisPoints = decimalRateToBasisPoints(
+                product.taxRate.toString(),
+              );
+
+              const { netCents, taxCents } = calculateInclusiveVat(
+                grossCents,
+                rateBasisPoints,
+              );
+
+              totalCents += grossCents;
 
               return {
                 product,
                 quantity: item.quantity,
                 unitPrice,
-                subtotal: centsToAmount(subtotalCents),
+                subtotal: centsToAmount(netCents),
+                taxRate: product.taxRate.toString(),
+                taxAmount: centsToAmount(taxCents),
+                grossAmount: centsToAmount(grossCents),
+                netCents,
+                taxCents,
               };
             });
+
+            const subtotalCents = preparedItems.reduce(
+              (sum, item) => sum + item.netCents,
+              0n,
+            );
+
+            const taxCents = preparedItems.reduce(
+              (sum, item) => sum + item.taxCents,
+              0n,
+            );
+
+            // Calculate payment details using the authoritative server total.
+            let amountReceived: string | null = null;
+            let changeAmount = "0.00";
+
+            if (body.paymentMethod === "CASH") {
+              const receivedCents = priceToCents(body.amountReceived!);
+
+              if (receivedCents < totalCents) {
+                throw new SaleOperationError(
+                  "INVALID_PRODUCT",
+                  "The amount received is less than the sale total.",
+                );
+              }
+
+              amountReceived = centsToAmount(receivedCents);
+              changeAmount = centsToAmount(receivedCents - totalCents);
+            }
 
             const createdSale = await tx.sale.create({
               data: {
@@ -263,8 +367,28 @@ export async function saleRoutes(app: FastifyInstance) {
                 cashierId: request.authUser!.id,
                 terminalId: dbTerminal.id,
                 totalAmount: centsToAmount(totalCents),
+                subtotalAmount: centsToAmount(subtotalCents),
+                taxAmount: centsToAmount(taxCents),
                 currencyCode: "XAF",
                 deviceCreatedAt: new Date(body.deviceCreatedAt),
+                paymentMethod: body.paymentMethod,
+                paymentStatus:
+                  body.paymentMethod === "CASH"
+                    ? "CASH_RECEIVED"
+                    : "CASHIER_CONFIRMED",
+
+                amountReceived,
+                changeAmount,
+
+                mobileMoneyProvider:
+                  body.paymentMethod === "MOBILE_MONEY"
+                    ? body.mobileMoneyProvider
+                    : null,
+
+                paymentReference:
+                  body.paymentMethod === "MOBILE_MONEY"
+                    ? body.paymentReference?.trim() || null
+                    : null,
               },
             });
 
@@ -280,11 +404,19 @@ export async function saleRoutes(app: FastifyInstance) {
                   quantity: item.quantity,
                   unitPrice: item.unitPrice,
                   subtotal: item.subtotal,
+                  taxRate: item.taxRate,
+                  taxAmount: item.taxAmount,
                 },
               });
 
               createdItems.push({
-                ...item,
+                product: item.product,
+                quantity: item.quantity,
+                unitPrice: item.unitPrice,
+                subtotal: item.subtotal,
+                taxRate: item.taxRate,
+                taxAmount: item.taxAmount,
+                grossAmount: item.grossAmount,
                 saleItemId: saleItem.id,
               });
 
@@ -345,9 +477,27 @@ export async function saleRoutes(app: FastifyInstance) {
                 quantity: item.quantity,
                 unitPrice: item.unitPrice,
                 subtotal: item.subtotal,
+                taxRate: item.taxRate,
+                taxAmount: item.taxAmount,
+                grossAmount: item.grossAmount,
               })),
 
               totalAmount: centsToAmount(totalCents),
+              subtotalAmount: centsToAmount(subtotalCents),
+              taxAmount: centsToAmount(taxCents),
+              payment: {
+                method: body.paymentMethod,
+                amountReceived,
+                changeAmount,
+                mobileMoneyProvider:
+                  body.paymentMethod === "MOBILE_MONEY"
+                    ? body.mobileMoneyProvider
+                    : null,
+                paymentReference:
+                  body.paymentMethod === "MOBILE_MONEY"
+                    ? body.paymentReference?.trim() || null
+                    : null,
+              },
             };
 
             const receipt = await tx.receipt.create({
@@ -385,13 +535,14 @@ export async function saleRoutes(app: FastifyInstance) {
           },
         );
 
+        // request.log.info({ sale }, "SALE_RESPONSE_DEBUG");
+
         return reply.code(201).send({
           message: "Sale completed successfully.",
           sale,
           duplicate: false,
         });
       } catch (error) {
-        
         if (error instanceof SaleOperationError) {
           if (error.reason === "NOT_FOUND") {
             return reply.code(404).send({
@@ -454,46 +605,107 @@ export async function saleRoutes(app: FastifyInstance) {
   // LIST SALES
   // ============================================================
 
+  // LIST SALES
   app.get(
     "/",
     {
       preHandler: [authenticate],
     },
-    async (request) => {
+    async (request, reply) => {
       const query = request.query as {
-        page?: number;
-        limit?: number;
+        page?: string;
+        limit?: string;
         terminalId?: string;
         cashierId?: string;
+        dateFrom?: string;
+        dateTo?: string;
+        paymentMethod?: string;
+        status?: string;
       };
 
       const user = request.authUser!;
 
       const page = Math.max(1, Number(query.page) || 1);
-
       const limit = Math.min(100, Math.max(1, Number(query.limit) || 20));
+
+      // Validate payment method.
+      if (
+        query.paymentMethod &&
+        !["CASH", "MOBILE_MONEY"].includes(query.paymentMethod)
+      ) {
+        return reply.code(400).send({
+          message: "Invalid payment method filter.",
+        });
+      }
+
+      // Validate sale status.
+      if (query.status && !["COMPLETED", "VOIDED"].includes(query.status)) {
+        return reply.code(400).send({
+          message: "Invalid sale status filter.",
+        });
+      }
+
+      // Validate date format (YYYY-MM-DD).
+      const validDate = (value?: string) =>
+        !value ||
+        (/^\d{4}-\d{2}-\d{2}$/.test(value) &&
+          !Number.isNaN(Date.parse(`${value}T00:00:00.000Z`)) &&
+          new Date(`${value}T00:00:00.000Z`).toISOString().startsWith(value));
+
+      if (!validDate(query.dateFrom) || !validDate(query.dateTo)) {
+        return reply.code(400).send({
+          message: "Dates must use the YYYY-MM-DD format.",
+        });
+      }
+
+      if (query.dateFrom && query.dateTo && query.dateFrom > query.dateTo) {
+        return reply.code(400).send({
+          message: "The start date cannot be after the end date.",
+        });
+      }
+
+      // Use an exclusive upper bound so the entire end date is included.
+      const dateFilter: { gte?: Date; lt?: Date } = {};
+
+      if (query.dateFrom) {
+        dateFilter.gte = new Date(`${query.dateFrom}T00:00:00.000Z`);
+      }
+
+      if (query.dateTo) {
+        const endExclusive = new Date(`${query.dateTo}T00:00:00.000Z`);
+        endExclusive.setUTCDate(endExclusive.getUTCDate() + 1);
+        dateFilter.lt = endExclusive;
+      }
 
       // Cashiers can only see their own sales.
       // Admins and managers can filter by any cashier.
       const where = {
         ...(user.role === "CASHIER"
-          ? {
-              cashierId: user.id,
-            }
+          ? { cashierId: user.id }
           : query.cashierId
-            ? {
-                cashierId: query.cashierId,
-              }
+            ? { cashierId: query.cashierId }
             : {}),
 
-        ...(query.terminalId
+        ...(query.terminalId ? { terminalId: query.terminalId } : {}),
+
+        ...(query.paymentMethod
           ? {
-              terminalId: query.terminalId,
+              paymentMethod: query.paymentMethod as "CASH" | "MOBILE_MONEY",
             }
+          : {}),
+
+        ...(query.status
+          ? {
+              status: query.status as "COMPLETED" | "VOIDED",
+            }
+          : {}),
+
+        ...(Object.keys(dateFilter).length > 0
+          ? { createdAt: dateFilter }
           : {}),
       };
 
-      const [sales, total] = await prisma.$transaction([
+      const [sales, total, summary] = await prisma.$transaction([
         prisma.sale.findMany({
           where,
           include: {
@@ -531,8 +743,13 @@ export async function saleRoutes(app: FastifyInstance) {
           take: limit,
         }),
 
-        prisma.sale.count({
+        prisma.sale.count({ where }),
+
+        prisma.sale.aggregate({
           where,
+          _sum: {
+            totalAmount: true,
+          },
         }),
       ]);
 
@@ -543,6 +760,9 @@ export async function saleRoutes(app: FastifyInstance) {
           limit,
           total,
           totalPages: Math.ceil(total / limit),
+        },
+        summary: {
+          totalAmount: summary._sum.totalAmount?.toString() ?? "0",
         },
       };
     },

@@ -18,6 +18,7 @@ import { terminalRoutes } from "./modules/terminals/terminal.routes.js";
 import { terminalPairingRoutes } from "./modules/terminals/terminal-pairing.routes.js";
 import { receiptRoutes } from "./modules/receipts/receipt.routes.js";
 import { terminalHeartbeatRoutes } from "./modules/terminals/terminal-heartbeat.routes.js";
+import { auditLogRoutes } from "./modules/audit-logs/audit-log.routes.js";
 
 export function buildApp() {
   const app = Fastify({
@@ -28,6 +29,7 @@ export function buildApp() {
 
   app.register(cors, {
     origin: true,
+    methods: ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   });
 
   app.register(rateLimit, {
@@ -51,6 +53,7 @@ export function buildApp() {
   app.register(terminalPairingRoutes, { prefix: "/terminals" });
   app.register(terminalHeartbeatRoutes, { prefix: "/terminals" });
   app.register(receiptRoutes, { prefix: "/receipts" });
+  app.register(auditLogRoutes, { prefix: "/audit-logs" });
 
   app.addHook("onClose", async () => {
     await prisma.$disconnect();
